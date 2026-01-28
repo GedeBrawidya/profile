@@ -1,8 +1,9 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
 import { Calendar, MapPin } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import { useRef } from "react"
 
 const jobs = [
   {
@@ -47,16 +48,153 @@ const jobs = [
   },
 ]
 
+function JobCard({ job, index }: { job: (typeof jobs)[0]; index: number }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [10, -10]), {
+    stiffness: 300,
+    damping: 30,
+  })
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-10, 10]), {
+    stiffness: 300,
+    damping: 30,
+  })
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current) return
+
+    const rect = ref.current.getBoundingClientRect()
+    const width = rect.width
+    const height = rect.height
+    const mouseXPos = e.clientX - rect.left
+    const mouseYPos = e.clientY - rect.top
+
+    const xPct = mouseXPos / width - 0.5
+    const yPct = mouseYPos / height - 0.5
+
+    mouseX.set(xPct)
+    mouseY.set(yPct)
+  }
+
+  const handleMouseLeave = () => {
+    mouseX.set(0)
+    mouseY.set(0)
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.15, duration: 0.6 }}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+      }}
+      whileHover={{ y: -10 }}
+      className={`group relative rounded-2xl p-8 min-h-[380px] flex flex-col justify-between overflow-hidden cursor-pointer
+        ${index % 3 === 0 ? "lg:col-span-2 lg:row-span-2" : index % 3 === 1 ? "lg:row-span-2" : ""}
+      `}
+    >
+      {/* Glowing Border Gradient */}
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/20 via-accent/10 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      
+      {/* Animated Border Glow */}
+      <motion.div
+        className="absolute inset-0 rounded-2xl border-2 border-transparent"
+        animate={{
+          boxShadow: [
+            "inset 0 0 20px rgba(var(--accent-rgb), 0.1)",
+            "inset 0 0 40px rgba(var(--accent-rgb), 0.3)",
+            "inset 0 0 20px rgba(var(--accent-rgb), 0.1)",
+          ],
+        }}
+        transition={{ duration: 3, repeat: Infinity }}
+        style={{
+          borderColor: "rgba(var(--accent-rgb), 0.6)",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Card Background */}
+      <div className="absolute inset-0 bg-card rounded-2xl opacity-95" />
+
+      {/* Content */}
+      <div className="relative z-10">
+        {/* Status Badge */}
+        <div className="mb-6">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.1 }}
+          >
+            <Badge
+              variant={job.status === "current" ? "default" : "secondary"}
+              className={`${
+                job.status === "current"
+                  ? "bg-gradient-to-r from-accent/30 to-accent/20 text-accent border-2 border-accent/60 shadow-md shadow-accent/20"
+                  : "bg-secondary/30 text-muted-foreground border-2 border-secondary/60 shadow-md shadow-secondary/10"
+              }`}
+            >
+              {job.status === "current" ? "🔴 Current" : "✓ Completed"}
+            </Badge>
+          </motion.div>
+        </div>
+
+        {/* Header */}
+        <div className="mb-6">
+          <p className="text-accent font-semibold tracking-wider text-sm mb-2 uppercase">{job.company}</p>
+          <h3 className="text-2xl lg:text-3xl font-bold text-foreground mb-3">{job.title}</h3>
+          <p className="text-foreground/80 text-sm">{job.description}</p>
+        </div>
+
+        {/* Meta Info */}
+        <div className="flex flex-wrap gap-4 mb-6 text-xs text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <Calendar size={14} className="text-accent" />
+            <span>{job.period}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <MapPin size={14} className="text-accent" />
+            <span>{job.location}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Highlights - Bottom */}
+      <div className="relative z-10 flex flex-wrap gap-2">
+        {job.highlights.map((highlight, idx) => (
+          <motion.span
+            key={idx}
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ delay: idx * 0.05 }}
+            className="px-3 py-1.5 bg-accent/15 text-accent text-xs font-medium rounded-lg border-2 border-accent/40 hover:bg-accent/25 hover:border-accent/70 hover:shadow-md hover:shadow-accent/20 transition-all duration-300"
+          >
+            {highlight}
+          </motion.span>
+        ))}
+      </div>
+    </motion.div>
+  )
+}
+
 export function Jobs() {
   return (
-    <section id="jobs" className="py-32 px-6 lg:px-8 relative">
+    <section id="jobs" className="py-32 px-6 lg:px-8 relative overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
           <h2 className="text-4xl lg:text-5xl font-bold mb-4">Work Experience</h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto text-balance">
@@ -64,69 +202,12 @@ export function Jobs() {
           </p>
         </motion.div>
 
-        <div className="grid gap-6 max-w-4xl mx-auto">
+        {/* Masonry Grid with 3D Effect */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto" style={{ perspective: "1000px" }}>
           {jobs.map((job, index) => (
-            <motion.div
-              key={job.id}
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.15 }}
-              className="group relative"
-            >
-              <div className="relative border border-[#E5E1D8] dark:border-zinc-700/50 rounded-2xl p-8 bg-card hover:shadow-xl transition-all duration-300 hover:border-accent/30">
-                {/* Status Badge */}
-                <div className="absolute top-6 right-6">
-                  <Badge
-                    variant={job.status === "current" ? "default" : "secondary"}
-                    className={job.status === "current" ? "bg-green-500/20 text-green-600 dark:text-green-400" : ""}
-                  >
-                    {job.status === "current" ? "Current" : "Past"}
-                  </Badge>
-                </div>
-
-                {/* Header */}
-                <div className="mb-4">
-                  <h3 className="text-2xl font-bold mb-2">{job.title}</h3>
-                  <p className="text-accent font-semibold mb-3">{job.company}</p>
-                </div>
-
-                {/* Meta Info */}
-                <div className="flex flex-wrap gap-4 mb-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <Calendar size={16} />
-                    <span>{job.period}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin size={16} />
-                    <span>{job.location}</span>
-                  </div>
-                </div>
-
-                {/* Description */}
-                <p className="text-foreground/80 mb-6">{job.description}</p>
-
-                {/* Highlights */}
-                <div className="flex flex-wrap gap-2">
-                  {job.highlights.map((highlight, idx) => (
-                    <span
-                      key={idx}
-                      className="px-3 py-1 bg-accent/10 text-accent text-xs font-medium rounded-full"
-                    >
-                      {highlight}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Timeline Dot */}
-                <div className="absolute -left-[25px] top-12 w-[17px] h-[17px] bg-accent rounded-full border-4 border-background hidden lg:block" />
-              </div>
-            </motion.div>
+            <JobCard key={job.id} job={job} index={index} />
           ))}
         </div>
-
-        {/* Timeline Line */}
-        <div className="absolute left-1/2 lg:left-auto lg:left-[calc(50%-20px-280px)] top-40 bottom-0 w-1 bg-gradient-to-b from-accent/50 via-accent/25 to-transparent hidden lg:block" />
       </div>
     </section>
   )

@@ -5,7 +5,7 @@ import Image from "next/image"
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
 import { ExternalLink, Github } from "lucide-react"
-import { useRef } from "react"
+import { useRef, useState } from "react"
 
 const projects = [
   {
@@ -60,17 +60,27 @@ const projects = [
   },
 ]
 
-function ProjectCard({ project }: { project: (typeof projects)[0] }) {
+function ProjectCard({ 
+  project, 
+  isHovered, 
+  onHover,
+  onHoverEnd 
+}: { 
+  project: (typeof projects)[0]
+  isHovered: number | null
+  onHover: (id: number) => void
+  onHoverEnd: () => void
+}) {
   const ref = useRef<HTMLDivElement>(null)
 
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
 
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [5, -5]), {
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [10, -10]), {
     stiffness: 300,
     damping: 30,
   })
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-5, 5]), {
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-10, 10]), {
     stiffness: 300,
     damping: 30,
   })
@@ -94,73 +104,100 @@ function ProjectCard({ project }: { project: (typeof projects)[0] }) {
   const handleMouseLeave = () => {
     mouseX.set(0)
     mouseY.set(0)
+    onHoverEnd()
   }
+
+  const isCurrentHovered = isHovered === project.id
+  const hasHoveredCard = isHovered !== null
 
   return (
     <motion.div
       ref={ref}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onMouseEnter={() => onHover(project.id)}
       onClick={() => window.open(project.live, "_blank")}
       style={{
         rotateX,
         rotateY,
         transformStyle: "preserve-3d",
       }}
-      whileHover={{ scale: 1.02 }}
-      transition={{ duration: 0.2 }}
-      className={`
-        relative group rounded-2xl border-[0.5px] border-[#E5E1D8] dark:border-zinc-700/50 bg-card overflow-hidden
-        hover:shadow-2xl hover:border-accent/30 transition-all duration-300 cursor-pointer
-        ${project.size === "large" ? "md:col-span-2 md:row-span-2" : ""}
-        ${project.size === "medium" ? "md:col-span-1 md:row-span-2" : ""}
-      `}
+      animate={{
+        scale: isCurrentHovered ? 1.05 : hasHoveredCard ? 0.95 : 1,
+        opacity: isCurrentHovered ? 1 : hasHoveredCard ? 0.5 : 1,
+      }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+      className="group relative rounded-2xl p-8 min-h-[320px] flex flex-col justify-between overflow-hidden cursor-pointer"
     >
-      <div className="relative p-8 h-full flex flex-col justify-between min-h-[280px]">
-        <div className="absolute inset-0 bg-secondary/0 group-hover:bg-secondary/20 transition-all duration-500" />
+      {/* Glowing Border Gradient */}
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/20 via-accent/10 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-        {/* Project Image */}
-        <div className="absolute inset-0 overflow-hidden">
-          <Image
-            src={project.image}
-            alt={project.title}
-            fill
-            className="w-full h-full object-cover opacity-40 group-hover:opacity-80 transition-opacity duration-300"
-          />
-        </div>
+      {/* Animated Border Glow */}
+      <motion.div
+        className="absolute inset-0 rounded-2xl border-2 border-transparent"
+        animate={{
+          boxShadow: [
+            "inset 0 0 20px rgba(var(--accent-rgb), 0.1)",
+            "inset 0 0 40px rgba(var(--accent-rgb), 0.3)",
+            "inset 0 0 20px rgba(var(--accent-rgb), 0.1)",
+          ],
+        }}
+        transition={{ duration: 3, repeat: Infinity }}
+        style={{
+          borderColor: "rgba(var(--accent-rgb), 0.6)",
+          pointerEvents: "none",
+        }}
+      />
 
-        <div className="relative z-10">
-          <div className="text-xs font-medium text-accent mb-3 tracking-wide uppercase">{project.category}</div>
-          <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
-          <p className="text-muted-foreground text-sm leading-relaxed">{project.description}</p>
-        </div>
+      {/* Card Background */}
+      <div className="absolute inset-0 bg-card rounded-2xl opacity-95" />
 
-        <div className="relative z-10 flex items-center justify-between">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-2 text-sm font-medium text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          >
-            View Project
+      {/* Project Image */}
+      <div className="absolute inset-0 overflow-hidden rounded-2xl">
+        <Image
+          src={project.image}
+          alt={project.title}
+          fill
+          className="w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-300"
+        />
+      </div>
+
+      <div className="relative z-10 flex-1 flex flex-col">
+        <div className="text-xs font-medium text-accent mb-3 tracking-wide uppercase">{project.category}</div>
+        <h3 className="text-2xl font-bold text-foreground mb-2">{project.title}</h3>
+        <p className="text-muted-foreground text-sm leading-relaxed flex-1">{project.description}</p>
+      </div>
+
+      <div className="relative z-10 flex items-center justify-between mt-6 pt-6 border-t border-accent/20 group-hover:border-accent/40 transition-colors duration-300">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          className="flex items-center gap-2 text-sm font-semibold text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        >
+          View Project
+          <motion.div animate={{ x: [0, 2, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
             <ExternalLink className="w-4 h-4" />
           </motion.div>
+        </motion.div>
 
-          <a
-            href={project.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-accent hover:text-accent/80"
-          >
-            <Github className="w-5 h-5" />
-          </a>
-        </div>
+        <motion.a
+          href={project.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          whileHover={{ scale: 1.15 }}
+          className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-9 h-9 rounded-full border-2 border-accent/30 hover:border-accent/70 hover:bg-accent/10 flex items-center justify-center text-accent hover:shadow-lg hover:shadow-accent/20"
+        >
+          <Github className="w-4 h-4" />
+        </motion.a>
       </div>
     </motion.div>
   )
 }
 
 export function Projects() {
+  const [hoveredId, setHoveredId] = useState<number | null>(null)
+
   return (
     <section id="work" className="py-32 px-6 lg:px-8 relative">
       <div className="max-w-7xl mx-auto">
@@ -177,9 +214,32 @@ export function Projects() {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-6 auto-rows-fr">
-          {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+        {/* Responsive Grid Layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-max">
+          {projects.map((project, index) => (
+            <motion.div
+              key={project.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1, duration: 0.5 }}
+              className={`
+                ${
+                  project.size === "large"
+                    ? "sm:col-span-2 lg:col-span-2 lg:row-span-2"
+                    : project.size === "medium"
+                      ? "sm:col-span-1 lg:col-span-1 lg:row-span-2"
+                      : "sm:col-span-1"
+                }
+              `}
+            >
+              <ProjectCard 
+                project={project} 
+                isHovered={hoveredId}
+                onHover={setHoveredId}
+                onHoverEnd={() => setHoveredId(null)}
+              />
+            </motion.div>
           ))}
         </div>
       </div>
