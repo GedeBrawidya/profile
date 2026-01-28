@@ -76,16 +76,11 @@ export function Certificates() {
         </motion.div>
 
         <div className="relative w-full overflow-hidden py-8">
-        <motion.div
+          <motion.div
             animate={{ x: -scrollPosition }}
-            transition={{
-              type: "tween",
-              ease: "linear",
-              duration: 0.02
-            }}
+            transition={{ type: "tween", ease: "linear", duration: 0.02 }}
             className="flex gap-6 w-max"
           >
-
             {/* Double the certificates for continuous loop effect */}
             {[...certificates, ...certificates].map((cert, index) => (
               <motion.div
