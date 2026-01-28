@@ -199,9 +199,9 @@ export function Certificates() {
 
                     {/* Card */}
                     <div className="relative bg-card border-2 border-accent/30 rounded-2xl p-8 min-h-[400px] flex flex-col items-center justify-center space-y-6 hover:border-accent/70 hover:shadow-2xl hover:shadow-accent/20 transition-all duration-300 shadow-lg">
-                      {/* Large Icon */}
+                      {/* Background Icon */}
                       <motion.div 
-                        className="text-9xl"
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-9xl opacity-10 pointer-events-none"
                         animate={{ scale: [1, 1.05, 1] }}
                         transition={{ duration: 3, repeat: Infinity }}
                       >
@@ -211,10 +211,20 @@ export function Certificates() {
                       {/* Shine effect */}
                       <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                      {/* Text overlay */}
-                      <div className="text-center space-y-2 relative z-10">
-                        <p className="text-sm text-accent font-semibold tracking-wide uppercase">Certified</p>
-                        <p className="text-xl font-bold">{cert.date}</p>
+                      {/* Text overlay - Prominent */}
+                      <div className="text-center space-y-4 relative z-20">
+                        <motion.div 
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ delay: 0.3, type: "spring" }}
+                          className="text-7xl"
+                        >
+                          {cert.icon}
+                        </motion.div>
+                        <div className="space-y-2">
+                          <p className="text-sm text-accent font-semibold tracking-wide uppercase">Certified</p>
+                          <p className="text-3xl font-bold text-foreground">{cert.date}</p>
+                        </div>
                       </div>
                     </div>
                   </div>

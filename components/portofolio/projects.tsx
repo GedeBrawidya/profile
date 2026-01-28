@@ -168,7 +168,7 @@ function ProjectCard({
         <p className="text-muted-foreground text-sm leading-relaxed flex-1">{project.description}</p>
       </div>
 
-      <div className="relative z-10 flex items-center justify-between mt-6 pt-6 border-t border-accent/20 group-hover:border-accent/40 transition-colors duration-300">
+      <div className="relative z-10 flex items-center justify-between mt-6 pt-6">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
