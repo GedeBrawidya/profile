@@ -1,7 +1,8 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Calendar, MapPin, Badge } from "lucide-react"
+import { Calendar, MapPin } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 
 const jobs = [
   {
