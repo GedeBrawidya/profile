@@ -12,7 +12,7 @@ import { useTheme } from "next-themes"
 const stats = [
   { label: "Years Experience", value: "2+", position: { top: "10%", right: "5%" } },
   { label: "Projects", value: "10+", position: { bottom: "15%", right: "10%" } },
-  { label: "Happy Clients", value: "8+", position: { top: "40%", left: "0%" } },
+  { label: "Happy Clients", value: "3+", position: { top: "40%", left: "0%" } },
 ]
 
 export function Hero() {
@@ -71,6 +71,7 @@ export function Hero() {
 
   return (
     <section
+      id="about"
       ref={heroRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -138,9 +139,9 @@ export function Hero() {
               className="flex items-center gap-6 mt-12"
             >
               {[
-                { icon: Github, href: "https://github.com", label: "GitHub" },
-                { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-                { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
+                { icon: Github, href: "https://github.com/GedeBrawidya", label: "GitHub" },
+                { icon: Linkedin, href: "https://www.linkedin.com/in/gede-brawidya-puja-dharma-6b4889322/", label: "LinkedIn" },
+                { icon: Instagram, href: "https://www.instagram.com/feelofenxy/?next=%2F", label: "Instagram" },
               ].map((social, idx) => (
                 <motion.a
                   key={social.label}
@@ -159,7 +160,7 @@ export function Hero() {
 
               {/* Upwork Icon */}
               <motion.a
-                href="https://upwork.com"
+                href="https://www.upwork.com/freelancers/~0146c4bd16af435439"
                 target="_blank"
                 rel="noopener noreferrer"
                 title="Upwork"

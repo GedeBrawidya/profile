@@ -184,8 +184,6 @@ export function Certificates() {
                   </motion.button>
                 </div>
               </motion.div>
-
-              {/* Right Side - Visual Card */}
               <motion.div
                 initial={{ x: 50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
