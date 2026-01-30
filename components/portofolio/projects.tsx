@@ -3,60 +3,70 @@
 import type React from "react"
 import Image from "next/image"
 
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
-import { ExternalLink, Github } from "lucide-react"
+import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion"
+import { ExternalLink, Github, X } from "lucide-react"
 import { useRef, useState } from "react"
 
 const projects = [
   {
     id: 1,
-    title: "Raihan-gold - Website Jual Beli Emas Antam",
+    title: "Raihan Gold",
     category: "Web App",
-    description: "Modern shopping experience with Next.js",
+    description: "landing page for gold trading platform",
     size: "large",
-    image: "/tes-project.png",
-    github: "https://github.com",
-    live: "https://example.com",
+    image: "/raihan-gold.png",
+    github: "https://github.com/GedeBrawidya/raihan-gold.git",
+    live: "https://raihan-gold-git-main-brawidyas-projects.vercel.app/",
+    technologies: ["React", "Supabase", "Tailwind CSS"],
+    details: "Website Jual Beli Emas Antam - Modern landing page for a gold trading platform built with React and Supabase for real-time database management.",
   },
   {
     id: 2,
-    title: "Movera - Remove",
+    title: "Movera",
     category: "Web App",
-    description: "Analytics platform with real-time data",
+    description: "Application to remove background from images",
     size: "medium",
     image: "/tes-project.png",
-    github: "https://github.com",
+    github: "https://github.com/GedeBrawidya/movera.git",
     live: "https://example.com",
+    technologies: ["Next.js", "Remove BG API", "TypeScript"],
+    details: "Remove - Background removal application using Next.js with integration of Remove BG API for intelligent image processing.",
   },
   {
-    id: 3,
-    title: "Pantauin - trackering worker",
+    id: 3,  
+    title: "Pantauin",
     category: "web App",
-    description: "Minimalist portfolio with Framer Motion",
+    description: "Worker tracking application for organizations",
     size: "medium",
-    image: "/tes-project.png",
-    github: "https://github.com",
-    live: "https://example.com",
+    image: "/pantauin.png",
+    github: "https://github.com/GedeBrawidya/pantauin.git",
+    live: "https://pantauin.vercel.app/",
+    technologies: ["React", "Express", "MongoDB"],
+    details: "Tracking Worker - Comprehensive worker tracking solution built with React frontend and Express backend for real-time location monitoring.",
   },
   {
     id: 4,
-    title: "Convertin - Convert APP",
+    title: "Convertin",
     category: "website",
-    description: "Cross-platform fitness tracking app",
+    description: "File conversion made easy",
     size: "small",
-    image: "/tes-project.png",
-    github: "https://github.com",
+    image: "/convertin.png",
+    github: "https://github.com/GedeBrawidya/convertin.git",
     live: "https://example.com",
+    technologies: ["React", "Python", "Flask"],
+    details: "Convert APP - File conversion application with React frontend and Python backend for multi-format file processing.",
   },
   {
     id: 5,
-    title: "Karang Taruna - Website Organization",
+    title: "Karang Taruna",
     category: "website",
-    description: "Reusable components for enterprise",
+    description: "Website for community organization management",
     size: "small",
-    image: "/tes-project.png",
-    github: "https://github.com",
-    live: "https://example.com",
+    image: "/karang-taruna.png",
+    github: "https://github.com/rifkibayuariy/karang-taruna.git",
+    live: "https://techtona.online",
+    technologies: ["Next.js", "Prisma", "PostgreSQL"],
+    details: "Website Organization - Community organization website built with Next.js for managing members, events, and organizational activities.",
   },
 ]
 
@@ -64,12 +74,14 @@ function ProjectCard({
   project, 
   isHovered, 
   onHover,
-  onHoverEnd 
+  onHoverEnd,
+  onViewProject
 }: { 
   project: (typeof projects)[0]
   isHovered: number | null
   onHover: (id: number) => void
   onHoverEnd: () => void
+  onViewProject: (project: typeof projects[0]) => void
 }) {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -150,46 +162,50 @@ function ProjectCard({
       />
 
       {/* Card Background */}
-      <div className="absolute inset-0 bg-card rounded-2xl opacity-95" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/40 to-transparent rounded-2xl" />
 
-      {/* Project Image */}
+      {/* Project Image - Full Opacity */}
       <div className="absolute inset-0 overflow-hidden rounded-2xl">
         <Image
           src={project.image}
           alt={project.title}
           fill
-          className="w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-300"
+          className="w-full h-full object-cover"
         />
       </div>
 
-      <div className="relative z-10 flex-1 flex flex-col">
-        <div className="text-xs font-medium text-accent mb-3 tracking-wide uppercase">{project.category}</div>
-        <h3 className="text-2xl font-bold text-foreground mb-2">{project.title}</h3>
-        <p className="text-muted-foreground text-sm leading-relaxed flex-1">{project.description}</p>
-      </div>
+      <div className="relative z-10 flex-1 flex flex-col justify-between">
+        <div>
+          <div className="text-xs font-medium text-accent mb-2 tracking-wide uppercase drop-shadow-lg">{project.category}</div>
+          <h3 className="text-2xl font-bold text-accent drop-shadow-lg">{project.title}</h3>
+        </div>
 
-      <div className="relative z-10 flex items-center justify-between mt-6 pt-6">
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-2 text-sm font-semibold text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        >
-          View Project
-          <motion.div animate={{ x: [0, 2, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
-            <ExternalLink className="w-4 h-4" />
-          </motion.div>
-        </motion.div>
+        <div className="relative z-10 flex items-center justify-between mt-6 pt-6">
+          <motion.button
+            onClick={(e) => {
+              e.stopPropagation()
+              onViewProject(project)
+            }}
+            whileHover={{ scale: 1.05 }}
+            className="flex items-center gap-2 text-sm font-semibold text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:text-accent/80"
+          >
+            View Project
+            <motion.div animate={{ x: [0, 2, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
+              <ExternalLink className="w-4 h-4" />
+            </motion.div>
+          </motion.button>
 
-        <motion.a
-          href={project.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={(e) => e.stopPropagation()}
-          whileHover={{ scale: 1.15 }}
-          className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-9 h-9 rounded-full border-2 border-accent/30 hover:border-accent/70 hover:bg-accent/10 flex items-center justify-center text-accent hover:shadow-lg hover:shadow-accent/20"
-        >
-          <Github className="w-4 h-4" />
-        </motion.a>
+          <motion.a
+            href={project.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            whileHover={{ scale: 1.15 }}
+            className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-9 h-9 rounded-full border-2 border-accent/30 hover:border-accent/70 hover:bg-accent/10 flex items-center justify-center text-accent hover:shadow-lg hover:shadow-accent/20"
+          >
+            <Github className="w-4 h-4" />
+          </motion.a>
+        </div>
       </div>
     </motion.div>
   )
@@ -197,6 +213,7 @@ function ProjectCard({
 
 export function Projects() {
   const [hoveredId, setHoveredId] = useState<number | null>(null)
+  const [selectedProject, setSelectedProject] = useState<(typeof projects)[0] | null>(null)
 
   return (
     <section id="work" className="py-32 px-6 lg:px-8 relative">
@@ -238,11 +255,108 @@ export function Projects() {
                 isHovered={hoveredId}
                 onHover={setHoveredId}
                 onHoverEnd={() => setHoveredId(null)}
+                onViewProject={setSelectedProject}
               />
             </motion.div>
           ))}
         </div>
       </div>
+
+      {/* Project Detail Modal */}
+      <AnimatePresence>
+        {selectedProject && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedProject(null)}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-card border-2 border-accent/30 rounded-2xl max-w-2xl w-full shadow-2xl shadow-accent/20"
+            >
+              {/* Header */}
+              <div className="flex items-start justify-between p-8 border-b border-accent/20">
+                <div className="flex-1">
+                  <h2 className="text-3xl font-bold mb-2">{selectedProject.title}</h2>
+                  <p className="text-muted-foreground text-sm uppercase tracking-wide">
+                    {selectedProject.category}
+                  </p>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setSelectedProject(null)}
+                  className="w-10 h-10 rounded-full border-2 border-accent/30 hover:border-accent/70 hover:bg-accent/10 flex items-center justify-center text-accent hover:shadow-lg hover:shadow-accent/20 transition-all duration-300"
+                >
+                  <X className="w-5 h-5" />
+                </motion.button>
+              </div>
+
+              {/* Content */}
+              <div className="p-8 space-y-6">
+                {/* Description */}
+                <div>
+                  <h3 className="text-sm font-semibold text-accent mb-2 uppercase tracking-wide">
+                    Description
+                  </h3>
+                  <p className="text-foreground/80 leading-relaxed">{selectedProject.details}</p>
+                </div>
+
+                {/* Technologies */}
+                <div>
+                  <h3 className="text-sm font-semibold text-accent mb-3 uppercase tracking-wide">
+                    Technologies Used
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedProject.technologies.map((tech) => (
+                      <motion.span
+                        key={tech}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="px-3 py-1.5 bg-accent/15 text-accent text-xs font-medium rounded-lg border-2 border-accent/40 hover:bg-accent/25 hover:border-accent/70 transition-all duration-300"
+                      >
+                        {tech}
+                      </motion.span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* CTA Buttons */}
+                <div className="flex items-center gap-4 pt-4">
+                  <motion.a
+                    href={selectedProject.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex-1 px-6 py-3 bg-gradient-to-r from-accent to-accent/90 text-background rounded-xl font-semibold hover:shadow-lg hover:shadow-accent/30 transition-all duration-300 flex items-center justify-center gap-2"
+                  >
+                    Visit Live Project
+                    <ExternalLink className="w-4 h-4" />
+                  </motion.a>
+                  <motion.a
+                    href={selectedProject.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-6 py-3 border-2 border-accent/30 rounded-xl font-semibold text-accent hover:bg-accent/10 hover:border-accent/70 transition-all duration-300 flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-accent/20"
+                  >
+                    <Github className="w-4 h-4" />
+                    Code
+                  </motion.a>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   )
 }
