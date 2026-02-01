@@ -4,7 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Updated to premium warm minimalist palette */
+
+  --accent-rgb: 59, 130, 246; /* Contoh warna biru, sesuaikan dengan tema accent kamu */
   --background: #fafafa; /* broken white */
   --foreground: #09090b; /* deep warm charcoal */
   --accent: #78716c; /* warm gray accent */
