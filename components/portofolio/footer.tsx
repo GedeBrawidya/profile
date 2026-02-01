@@ -62,7 +62,7 @@ export function Footer() {
               Creating digital experiences that blend technical excellence with thoughtful design.
             </p>
             <motion.a
-              href="mailto:hello@enxyest.com"
+              href="mailto:hello@gedepujaa9@gmail.com"
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.99 }}
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-zinc-800 dark:bg-zinc-200 text-zinc-50 dark:text-zinc-900 rounded-md hover:opacity-90 transition-opacity text-sm"
