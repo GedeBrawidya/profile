@@ -3,7 +3,7 @@
 import { Hero } from "@/components/portofolio/hero"
 import { Services } from "@/components/portofolio/services"
 import { Projects } from "@/components/portofolio/projects"
-import { Certificates } from "@/components/portofolio/certificates"
+// import { Certificates } from "@/components/portofolio/certificates"
 import { Jobs } from "@/components/portofolio/jobs"
 import { FloatingReviews } from "@/components/portofolio/floating-review"
 import { Navigation } from "@/components/portofolio/navigation"
@@ -18,7 +18,7 @@ export default function Portfolio() {
         <Services />
         <Jobs />
         <Projects />
-        <Certificates />
+        {/* <Certificates /> */}
         <FloatingReviews />
         <Footer />
       </main>
