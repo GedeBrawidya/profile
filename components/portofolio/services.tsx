@@ -40,9 +40,9 @@ const container = {
 
 const item = {
   hidden: { opacity: 0, y: 40, rotateX: -20 },
-  show: { 
-    opacity: 1, 
-    y: 0, 
+  show: {
+    opacity: 1,
+    y: 0,
     rotateX: 0,
     transition: {
       type: "spring" as const,
@@ -61,13 +61,18 @@ export function Services() {
   })
 
   const backgroundY = useTransform(scrollYProgress, [0, 1], [100, -100])
+  const backgroundX = useTransform(scrollYProgress, [0, 1], [-50, 50])
 
   return (
     <section id="services" className="py-32 px-6 lg:px-8 relative overflow-hidden" ref={sectionRef}>
-      {/* Animated Background */}
+      {/* Animated Background with dual movement */}
       <motion.div
-        style={{ y: backgroundY }}
+        style={{ y: backgroundY, x: backgroundX }}
         className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-accent/5 rounded-full blur-3xl pointer-events-none"
+      />
+      <motion.div
+        style={{ y: useTransform(scrollYProgress, [0, 1], [-100, 100]) }}
+        className="absolute bottom-0 right-0 w-64 h-64 bg-accent/3 rounded-full blur-3xl pointer-events-none"
       />
 
       <div className="max-w-7xl mx-auto relative z-10">
@@ -92,16 +97,42 @@ export function Services() {
           className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 perspective"
           style={{ perspective: "1200px" }}
         >
-          {services.map((service) => (
+          {services.map((service, idx) => (
             <motion.div
               key={service.title}
               variants={item}
               className="group relative p-8 rounded-2xl border-2 border-accent/20 bg-card hover:bg-gradient-to-br hover:from-secondary/30 hover:to-secondary/10 hover:border-accent/60 transition-all duration-300 cursor-pointer shadow-md hover:shadow-xl hover:shadow-accent/20"
               style={{ transformStyle: "preserve-3d" }}
+              animate={{
+                y: [0, -8, 0],
+              }}
+              transition={{
+                y: {
+                  duration: 3 + idx * 0.3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: idx * 0.4,
+                },
+              }}
               whileHover={{
-                y: -10,
+                y: -15,
+                transition: { duration: 0.3 }
               }}
             >
+              {/* Animated gradient background */}
+              <motion.div
+                className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100"
+                animate={{
+                  backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"],
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+                style={{ backgroundSize: "200% 200%" }}
+              />
+
               {/* Shine effect on hover */}
               <motion.div
                 className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100"
@@ -112,15 +143,26 @@ export function Services() {
               />
 
               <motion.div
-                className="w-12 h-12 rounded-xl border-2 border-accent/30 bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center mb-6 group-hover:border-accent/70 group-hover:shadow-lg group-hover:shadow-accent/20 transition-all duration-300"
+                className="w-12 h-12 rounded-xl border-2 border-accent/30 bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center mb-6 group-hover:border-accent/70 group-hover:shadow-lg group-hover:shadow-accent/20 transition-all duration-300 relative z-10"
                 whileHover={{ scale: 1.2, rotate: 10 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                animate={{
+                  rotate: [0, 5, -5, 0],
+                }}
+                transition={{
+                  rotate: {
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: idx * 0.5,
+                  },
+                  scale: { type: "spring", stiffness: 400, damping: 10 }
+                }}
               >
                 <service.icon className="w-6 h-6 text-accent" />
               </motion.div>
 
-              <h3 className="text-xl font-semibold mb-3">{service.title}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">{service.description}</p>
+              <h3 className="text-xl font-semibold mb-3 relative z-10">{service.title}</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed relative z-10">{service.description}</p>
             </motion.div>
           ))}
         </motion.div>
