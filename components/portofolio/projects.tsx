@@ -33,7 +33,7 @@ const projects = [
     details: "Remove - Background removal application using Next.js with integration of Remove BG API for intelligent image processing.",
   },
   {
-    id: 3,  
+    id: 3,
     title: "Pantauin",
     category: "web App",
     description: "Worker tracking application for organizations",
@@ -70,13 +70,13 @@ const projects = [
   },
 ]
 
-function ProjectCard({ 
-  project, 
-  isHovered, 
+function ProjectCard({
+  project,
+  isHovered,
   onHover,
   onHoverEnd,
   onViewProject
-}: { 
+}: {
   project: (typeof projects)[0]
   isHovered: number | null
   onHover: (id: number) => void
@@ -236,22 +236,22 @@ export function Projects() {
           {projects.map((project, index) => (
             <motion.div
               key={project.id}
+              id={`project-${project.title.toLowerCase().replace(/\s+/g, '-')}`}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
               className={`
-                ${
-                  project.size === "large"
-                    ? "sm:col-span-2 lg:col-span-2 lg:row-span-2"
-                    : project.size === "medium"
-                      ? "sm:col-span-1 lg:col-span-1 lg:row-span-2"
-                      : "sm:col-span-1"
+                ${project.size === "large"
+                  ? "sm:col-span-2 lg:col-span-2 lg:row-span-2"
+                  : project.size === "medium"
+                    ? "sm:col-span-1 lg:col-span-1 lg:row-span-2"
+                    : "sm:col-span-1"
                 }
               `}
             >
-              <ProjectCard 
-                project={project} 
+              <ProjectCard
+                project={project}
                 isHovered={hoveredId}
                 onHover={setHoveredId}
                 onHoverEnd={() => setHoveredId(null)}

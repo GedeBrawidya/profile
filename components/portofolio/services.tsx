@@ -1,107 +1,160 @@
 "use client"
 
-import { motion, useScroll, useTransform } from "framer-motion"
-import { Code2, Palette, Rocket, Sparkles, Database, Smartphone, Globe, Zap } from "lucide-react"
-import { useRef } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { Palette, Rocket, Sparkles, Database, Smartphone, Globe, Zap, ChevronLeft, ChevronRight } from "lucide-react"
+import { useState, useEffect, useRef } from "react"
+import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiFigma, SiFramer, SiLaravel, SiNodedotjs, SiPostgresql, SiSupabase } from "react-icons/si"
 
 const services = [
-  {
-    icon: Code2,
-    title: "Frontend Development",
-    description: "Building scalable React, Next.js, and TypeScript applications with modern architecture. Focus on component reusability, state management, and clean code principles.",
-    tools: ["React", "Next.js", "TypeScript", "Tailwind CSS"]
-  },
   {
     icon: Palette,
     title: "UI/UX Design",
     description: "Crafting beautiful, intuitive interfaces that users love. Converting Figma designs to pixel-perfect implementations with accessibility in mind.",
-    tools: ["Figma", "Framer Motion", "CSS3", "Design Systems"]
-  },
-  {
-    icon: Rocket,
-    title: "Performance Optimization",
-    description: "Ensuring lightning-fast load times through code splitting, lazy loading, image optimization, and efficient rendering strategies.",
-    tools: ["Lighthouse", "Web Vitals", "Bundle Analysis", "SSR/SSG"]
+    tech: [
+      { name: "Figma", icon: SiFigma },
+      { name: "Framer Motion", icon: SiFramer },
+      { name: "CSS3", icon: null },
+      { name: "Design Systems", icon: null }
+    ],
+    projects: ["Raihan Gold", "Karang Taruna"]
   },
   {
     icon: Sparkles,
     title: "Motion Design",
     description: "Adding delightful micro-interactions and smooth animations that enhance user experience and bring interfaces to life.",
-    tools: ["Framer Motion", "GSAP", "CSS Animations", "Three.js"]
+    tech: [
+      { name: "Framer Motion", icon: SiFramer },
+      { name: "GSAP", icon: null },
+      { name: "CSS Animations", icon: null },
+      { name: "Three.js", icon: null }
+    ],
+    projects: ["Raihan Gold", "Movera"]
   },
   {
     icon: Database,
     title: "Backend Integration",
     description: "Seamless API integration with REST and GraphQL. Experience with modern backend frameworks and database management.",
-    tools: ["Laravel", "Node.js", "Supabase", "PostgreSQL"]
+    tech: [
+      { name: "Laravel", icon: SiLaravel },
+      { name: "Node.js", icon: SiNodedotjs },
+      { name: "Supabase", icon: SiSupabase },
+      { name: "PostgreSQL", icon: SiPostgresql }
+    ],
+    projects: ["Pantauin", "Convertin"]
   },
   {
     icon: Smartphone,
     title: "Responsive Design",
     description: "Creating mobile-first, fully responsive applications that work flawlessly across all devices and screen sizes.",
-    tools: ["Mobile-First", "Progressive Web Apps", "Cross-Browser", "Adaptive UI"]
+    tech: [
+      { name: "Mobile-First", icon: null },
+      { name: "Progressive Web Apps", icon: null },
+      { name: "Cross-Browser", icon: null },
+      { name: "Adaptive UI", icon: null }
+    ],
+    projects: ["Karang Taruna", "Raihan Gold"]
   },
   {
     icon: Globe,
     title: "Full-Stack Development",
     description: "End-to-end application development from database design to deployment, handling both frontend and backend architecture.",
-    tools: ["React + Laravel", "Next.js API", "Vercel", "Docker"]
+    tech: [
+      { name: "React", icon: SiReact },
+      { name: "Next.js", icon: SiNextdotjs },
+      { name: "TypeScript", icon: SiTypescript },
+      { name: "Tailwind", icon: SiTailwindcss },
+      { name: "Laravel", icon: SiLaravel },
+      { name: "Node.js", icon: SiNodedotjs },
+      { name: "PostgreSQL", icon: SiPostgresql }
+    ],
+    projects: ["Raihan Gold", "Pantauin"]
+  },
+  {
+    icon: Rocket,
+    title: "Performance Optimization",
+    description: "Ensuring lightning-fast load times through code splitting, lazy loading, image optimization, and efficient rendering strategies.",
+    tech: [
+      { name: "Lighthouse", icon: null },
+      { name: "Web Vitals", icon: null },
+      { name: "Bundle Analysis", icon: null },
+      { name: "SSR/SSG", icon: null }
+    ],
+    projects: ["Movera", "Karang Taruna"]
   },
   {
     icon: Zap,
     title: "Rapid Prototyping",
     description: "Quick turnaround on MVP development and proof-of-concepts. Transforming ideas into working prototypes efficiently.",
-    tools: ["Rapid Development", "Agile", "CI/CD", "Git Workflow"]
+    tech: [
+      { name: "Rapid Development", icon: null },
+      { name: "Agile", icon: null },
+      { name: "CI/CD", icon: null },
+      { name: "Git Workflow", icon: null }
+    ],
+    projects: ["Convertin", "Movera"]
   },
 ]
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.2,
-    },
-  },
-}
-
-const item = {
-  hidden: { opacity: 0, y: 40, rotateX: -20 },
-  show: {
-    opacity: 1,
-    y: 0,
-    rotateX: 0,
-    transition: {
-      type: "spring" as const,
-      stiffness: 100,
-      damping: 15,
-      duration: 0.6,
-    }
-  },
-} as const
-
 export function Services() {
-  const sectionRef = useRef(null)
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  })
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const timerRef = useRef<NodeJS.Timeout | null>(null)
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], [100, -100])
-  const backgroundX = useTransform(scrollYProgress, [0, 1], [-50, 50])
+  const startTimer = () => {
+    if (timerRef.current) clearInterval(timerRef.current)
+    timerRef.current = setInterval(() => {
+      nextSlide()
+    }, 4000)
+  }
+
+  const stopTimer = () => {
+    if (timerRef.current) clearInterval(timerRef.current)
+  }
+
+  useEffect(() => {
+    startTimer()
+    return () => stopTimer()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % services.length)
+    startTimer()
+  }
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + services.length) % services.length)
+    startTimer()
+  }
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index)
+    startTimer()
+  }
+
+  const handleProjectClick = (projectName: string) => {
+    const projectId = `project-${projectName.toLowerCase().replace(/\s+/g, '-')}`
+    const projectElement = document.getElementById(projectId)
+
+    if (projectElement) {
+      projectElement.scrollIntoView({ behavior: "smooth", block: "center" })
+      // Add a temporary highlight effect
+      projectElement.style.transition = "transform 0.5s ease"
+      projectElement.style.transform = "scale(1.02)"
+      setTimeout(() => {
+        projectElement.style.transform = ""
+      }, 1000)
+    } else {
+      const projectsSection = document.getElementById("projects")
+      if (projectsSection) {
+        projectsSection.scrollIntoView({ behavior: "smooth" })
+      }
+    }
+  }
 
   return (
-    <section id="services" className="py-32 px-6 lg:px-8 relative overflow-hidden" ref={sectionRef}>
-      {/* Animated Background with dual movement */}
-      <motion.div
-        style={{ y: backgroundY, x: backgroundX }}
-        className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-accent/5 rounded-full blur-3xl pointer-events-none"
-      />
-      <motion.div
-        style={{ y: useTransform(scrollYProgress, [0, 1], [-100, 100]) }}
-        className="absolute bottom-0 right-0 w-64 h-64 bg-accent/3 rounded-full blur-3xl pointer-events-none"
-      />
+    <section id="services" className="py-32 px-6 lg:px-8 relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-64 h-64 bg-accent/3 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
@@ -117,98 +170,145 @@ export function Services() {
           </p>
         </motion.div>
 
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 perspective"
-          style={{ perspective: "1200px" }}
-        >
-          {services.map((service, idx) => (
-            <motion.div
-              key={service.title}
-              variants={item}
-              className="group relative p-6 rounded-2xl border-2 border-accent/20 bg-card hover:bg-gradient-to-br hover:from-secondary/30 hover:to-secondary/10 hover:border-accent/60 transition-all duration-300 cursor-pointer shadow-md hover:shadow-xl hover:shadow-accent/20 flex flex-col"
-              style={{ transformStyle: "preserve-3d" }}
-              animate={{
-                y: [0, -8, 0],
-              }}
-              transition={{
-                y: {
-                  duration: 3 + idx * 0.3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: idx * 0.4,
-                },
-              }}
-              whileHover={{
-                y: -15,
-                transition: { duration: 0.3 }
-              }}
-            >
-              {/* Animated gradient background */}
-              <motion.div
-                className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100"
-                animate={{
-                  backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"],
-                }}
-                transition={{
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-                style={{ backgroundSize: "200% 200%" }}
-              />
+        {/* Carousel Container */}
+        <div className="relative max-w-5xl mx-auto px-4 md:px-12">
+          {/* Main Slide */}
+          <div
+            className="relative h-[600px] md:h-[500px] overflow-hidden rounded-3xl bg-card border border-border/50 shadow-sm"
+            onMouseEnter={stopTimer}
+            onMouseLeave={startTimer}
+          >
+            <AnimatePresence mode="wait">
+              {(() => {
+                const currentService = services[currentSlide]
+                const ServiceIcon = currentService.icon
 
-              {/* Shine effect on hover */}
-              <motion.div
-                className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100"
-                initial={{ x: "-100%" }}
-                whileHover={{ x: "100%" }}
-                transition={{ duration: 0.6 }}
-                style={{ pointerEvents: "none" }}
-              />
-
-              <motion.div
-                className="w-12 h-12 rounded-xl border-2 border-accent/30 bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center mb-4 group-hover:border-accent/70 group-hover:shadow-lg group-hover:shadow-accent/20 transition-all duration-300 relative z-10"
-                whileHover={{ scale: 1.2, rotate: 10 }}
-                animate={{
-                  rotate: [0, 5, -5, 0],
-                }}
-                transition={{
-                  rotate: {
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: idx * 0.5,
-                  },
-                  scale: { type: "spring", stiffness: 400, damping: 10 }
-                }}
-              >
-                <service.icon className="w-6 h-6 text-accent" />
-              </motion.div>
-
-              <h3 className="text-lg font-bold mb-2 relative z-10">{service.title}</h3>
-              <p className="text-muted-foreground text-xs leading-relaxed relative z-10 mb-4 flex-grow">{service.description}</p>
-
-              {/* Tools/Technologies */}
-              <div className="relative z-10 flex flex-wrap gap-1.5 mt-auto">
-                {service.tools.map((tool, i) => (
-                  <motion.span
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.6 + (idx * 0.1) + (i * 0.05) }}
-                    className="px-2 py-0.5 bg-accent/10 text-accent text-[10px] font-medium rounded-md border border-accent/20 group-hover:bg-accent/20 group-hover:border-accent/40 transition-all"
+                return (
+                  <motion.div
+                    key={currentSlide}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    className="absolute inset-0 p-8 md:p-12"
                   >
-                    {tool}
-                  </motion.span>
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+                    <div className="relative z-10 h-full flex flex-col">
+                      {/* Icon and Title */}
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="w-14 h-14 rounded-xl border border-border bg-secondary/30 flex items-center justify-center">
+                          <ServiceIcon className="w-7 h-7 text-foreground" />
+                        </div>
+                        <h3 className="text-2xl md:text-4xl font-bold tracking-tight">
+                          {currentService.title}
+                        </h3>
+                      </div>
+
+                      {/* Description */}
+                      <p className="text-muted-foreground text-lg mb-8 max-w-2xl leading-relaxed">
+                        {currentService.description}
+                      </p>
+
+                      {/* Tech Stack */}
+                      <div className="mb-8">
+                        <h4 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wider">
+                          Technologies
+                        </h4>
+                        <div className="flex flex-wrap gap-2.5">
+                          {currentService.tech.map((tech, i) => {
+                            const TechIcon = tech.icon
+                            return (
+                              <motion.div
+                                key={i}
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 0.1 + i * 0.05 }}
+                                className="flex items-center gap-2 px-3 py-1.5 bg-secondary/30 border border-border/50 rounded-md hover:border-accent/40 hover:bg-secondary/50 transition-all"
+                              >
+                                {TechIcon && <TechIcon className="w-4 h-4 text-foreground/70" />}
+                                <span className="text-sm text-foreground/80">{tech.name}</span>
+                              </motion.div>
+                            )
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Related Projects */}
+                      <div className="mt-auto">
+                        <h4 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wider">
+                          Related Projects
+                        </h4>
+                        <div className="flex flex-wrap gap-4">
+                          {currentService.projects.map((project, i) => (
+                            <button
+                              key={i}
+                              onClick={() => handleProjectClick(project)}
+                              className="group flex items-center gap-1.5 text-sm font-medium text-accent hover:text-foreground transition-colors cursor-pointer"
+                            >
+                              <span>{project}</span>
+                              <span className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">→</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )
+              })()}
+            </AnimatePresence>
+          </div>
+
+          {/* Navigation Arrows (Desktop Outside) */}
+          <motion.button
+            onClick={prevSlide}
+            whileHover={{ scale: 1.1, x: -5 }}
+            whileTap={{ scale: 0.95 }}
+            className="hidden md:flex absolute -left-4 lg:-left-16 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-card border border-border text-muted-foreground hover:text-foreground shadow-lg items-center justify-center transition-colors z-20 cursor-pointer"
+            aria-label="Previous slide"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </motion.button>
+
+          <motion.button
+            onClick={nextSlide}
+            whileHover={{ scale: 1.1, x: 5 }}
+            whileTap={{ scale: 0.95 }}
+            className="hidden md:flex absolute -right-4 lg:-right-16 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-card border border-border text-muted-foreground hover:text-foreground shadow-lg items-center justify-center transition-colors z-20 cursor-pointer"
+            aria-label="Next slide"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </motion.button>
+
+          {/* Mobile Navigation (Inside) */}
+          <div className="flex md:hidden justify-between absolute top-1/2 left-6 right-6 -translate-y-1/2 pointer-events-none z-20">
+            <button
+              onClick={prevSlide}
+              className="w-10 h-10 rounded-full bg-card/90 backdrop-blur border border-border text-foreground flex items-center justify-center shadow-sm pointer-events-auto active:scale-95 transition-transform"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              onClick={nextSlide}
+              className="w-10 h-10 rounded-full bg-card/90 backdrop-blur border border-border text-foreground flex items-center justify-center shadow-sm pointer-events-auto active:scale-95 transition-transform"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Dot Indicators */}
+          <div className="flex justify-center gap-2 mt-8">
+            {services.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`h-1.5 rounded-full transition-all duration-300 ${index === currentSlide
+                  ? "w-8 bg-foreground"
+                  : "w-1.5 bg-border hover:bg-accent/50"
+                  }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   )
