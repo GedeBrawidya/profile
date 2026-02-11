@@ -6,18 +6,7 @@ import { useState, useEffect, useRef } from "react"
 import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss, SiFigma, SiFramer, SiLaravel, SiNodedotjs, SiPostgresql, SiSupabase } from "react-icons/si"
 
 const services = [
-  {
-    icon: Palette,
-    title: "UI/UX Design",
-    description: "Crafting beautiful, intuitive interfaces that users love. Converting Figma designs to pixel-perfect implementations with accessibility in mind.",
-    tech: [
-      { name: "Figma", icon: SiFigma },
-      { name: "Framer Motion", icon: SiFramer },
-      { name: "CSS3", icon: null },
-      { name: "Design Systems", icon: null }
-    ],
-    projects: ["Raihan Gold", "Karang Taruna"]
-  },
+
   {
     icon: Sparkles,
     title: "Motion Design",
@@ -30,18 +19,7 @@ const services = [
     ],
     projects: ["Raihan Gold", "Movera"]
   },
-  {
-    icon: Database,
-    title: "Backend Integration",
-    description: "Seamless API integration with REST and GraphQL. Experience with modern backend frameworks and database management.",
-    tech: [
-      { name: "Laravel", icon: SiLaravel },
-      { name: "Node.js", icon: SiNodedotjs },
-      { name: "Supabase", icon: SiSupabase },
-      { name: "PostgreSQL", icon: SiPostgresql }
-    ],
-    projects: ["Pantauin", "Convertin"]
-  },
+
   {
     icon: Smartphone,
     title: "Responsive Design",
@@ -69,30 +47,7 @@ const services = [
     ],
     projects: ["Raihan Gold", "Pantauin"]
   },
-  {
-    icon: Rocket,
-    title: "Performance Optimization",
-    description: "Ensuring lightning-fast load times through code splitting, lazy loading, image optimization, and efficient rendering strategies.",
-    tech: [
-      { name: "Lighthouse", icon: null },
-      { name: "Web Vitals", icon: null },
-      { name: "Bundle Analysis", icon: null },
-      { name: "SSR/SSG", icon: null }
-    ],
-    projects: ["Movera", "Karang Taruna"]
-  },
-  {
-    icon: Zap,
-    title: "Rapid Prototyping",
-    description: "Quick turnaround on MVP development and proof-of-concepts. Transforming ideas into working prototypes efficiently.",
-    tech: [
-      { name: "Rapid Development", icon: null },
-      { name: "Agile", icon: null },
-      { name: "CI/CD", icon: null },
-      { name: "Git Workflow", icon: null }
-    ],
-    projects: ["Convertin", "Movera"]
-  },
+
 ]
 
 export function Services() {

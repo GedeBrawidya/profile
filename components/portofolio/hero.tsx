@@ -108,7 +108,12 @@ export function Hero() {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="flex flex-col sm:flex-row items-center gap-4 mt-8"
             >
-              <motion.button
+              <motion.a
+                href="#work"
+                onClick={(e) => {
+                  e.preventDefault()
+                  document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })
+                }}
                 whileHover={{ scale: 1.05, boxShadow: "0 20px 25px -5px rgba(var(--accent-rgb), 0.2)" }}
                 whileTap={{ scale: 0.98 }}
                 className="group relative px-8 py-4 bg-gradient-to-r from-accent to-accent/90 text-background rounded-xl font-semibold text-lg shadow-lg hover:shadow-2xl hover:shadow-accent/30 transition-all duration-300 flex items-center gap-2"
@@ -120,15 +125,18 @@ export function Hero() {
                 >
                   <ArrowRight className="w-5 h-5" />
                 </motion.div>
-              </motion.button>
+              </motion.a>
 
-              <motion.button
+              <motion.a
+                href="https://wa.me/6281236758041"
+                target="_blank"
+                rel="noopener noreferrer"
                 whileHover={{ scale: 1.05, boxShadow: "0 20px 25px -5px rgba(var(--accent-rgb), 0.15)" }}
                 whileTap={{ scale: 0.98 }}
                 className="px-8 py-4 border-2 border-accent/30 rounded-xl font-semibold text-lg text-accent hover:bg-accent/10 hover:border-accent/60 transition-all duration-300 shadow-md hover:shadow-lg"
               >
                 Get In Touch
-              </motion.button>
+              </motion.a>
             </motion.div>
 
             {/* Social Media Icons */}
@@ -196,7 +204,7 @@ export function Hero() {
             >
               {/* Glow effect on image */}
               <div className="absolute inset-0 bg-gradient-to-t from-accent/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              
+
               <AnimatePresence mode="wait">
                 <motion.div
                   key={profileImage}
