@@ -51,7 +51,7 @@ const projects = [
     description: "File conversion made easy",
     size: "small",
     image: "/convertin.png",
-    github: "https://github.com/GedeBrawidya/convertin.git",
+    github: "https://github.com/GedeBrawidya/convert-project.git",
     live: "https://example.com",
     technologies: ["React", "Python", "Flask"],
     details: "Convert APP - File conversion application with React frontend and Python backend for multi-format file processing.",
