@@ -7,39 +7,39 @@ import { useState } from "react"
 const reviews = [
   {
     id: 1,
-    name: "felix",
-    role: "Consumen",
+    name: "raihan",
+    role: "CEO of Raihan Gold",
     rating: 5,
-    text: "Exceptional work! The attention to detail and technical expertise exceeded our expectations.",
+    text: "",
   },
   {
     id: 2,
-    name: "Michael Ross",
+    name: "jia",
     role: "Consumen",
     rating: 5,
-    text: "A true professional. Delivered a pixel-perfect design with smooth animations.",
+    text: "",
   },
-  {
-    id: 3,
-    name: "Emma Wilson",
-    role: "Consumen",
-    rating: 5,
-    text: "Creative problem solver with excellent communication. Highly recommend!",
-  },
-  {
-    id: 4,
-    name: "David Park",
-    role: "Consumen",
-    rating: 5,
-    text: "Built our MVP in record time without compromising on quality. Amazing!",
-  },
-  {
-    id: 5,
-    name: "Lisa Anderson",
-    role: "Consumen",
-    rating: 5,
-    text: "The website increased our conversion rate by 40%. Outstanding results!",
-  },
+  // {
+  //   id: 3,
+  //   name: "Emma Wilson",
+  //   role: "Consumen",
+  //   rating: 5,
+  //   text: "Creative problem solver with excellent communication. Highly recommend!",
+  // },
+  // {
+  //   id: 4,
+  //   name: "David Park",
+  //   role: "Consumen",
+  //   rating: 5,
+  //   text: "Built our MVP in record time without compromising on quality. Amazing!",
+  // },
+  // {
+  //   id: 5,
+  //   name: "Lisa Anderson",
+  //   role: "Consumen",
+  //   rating: 5,
+  //   text: "The website increased our conversion rate by 40%. Outstanding results!",
+  // },
 ]
 
 const orbitPositions = [
