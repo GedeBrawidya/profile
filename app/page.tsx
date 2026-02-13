@@ -8,6 +8,7 @@ import { Jobs } from "@/components/portofolio/jobs"
 import { FloatingReviews } from "@/components/portofolio/floating-review"
 import { Navigation } from "@/components/portofolio/navigation"
 import { Footer } from "@/components/portofolio/footer"
+import { ScrollToTop } from "@/components/portofolio/scroll-to-top"
 
 export default function Portfolio() {
   return (
@@ -22,6 +23,7 @@ export default function Portfolio() {
         <FloatingReviews />
         <Footer />
       </main>
+      <ScrollToTop />
     </>
   )
 }
