@@ -7,39 +7,18 @@ import { useState } from "react"
 const reviews = [
   {
     id: 1,
-    name: "raihan",
+    name: "Raihan",
     role: "CEO of Raihan Gold",
     rating: 5,
-    text: "",
+    text: "The platform enxyest built completely transformed our gold trading business. The real-time updates and secure transaction flow are exactly what we needed. Highly recommended!",
   },
   {
     id: 2,
-    name: "jia",
-    role: "Consumen",
+    name: "Jia",
+    role: "Product Owner at Movera",
     rating: 5,
-    text: "",
+    text: "Incredible attention to detail on our background removal tool. The UI is intuitive and the processing speed is blazing fast. exceeded our expectations!",
   },
-  // {
-  //   id: 3,
-  //   name: "Emma Wilson",
-  //   role: "Consumen",
-  //   rating: 5,
-  //   text: "Creative problem solver with excellent communication. Highly recommend!",
-  // },
-  // {
-  //   id: 4,
-  //   name: "David Park",
-  //   role: "Consumen",
-  //   rating: 5,
-  //   text: "Built our MVP in record time without compromising on quality. Amazing!",
-  // },
-  // {
-  //   id: 5,
-  //   name: "Lisa Anderson",
-  //   role: "Consumen",
-  //   rating: 5,
-  //   text: "The website increased our conversion rate by 40%. Outstanding results!",
-  // },
 ]
 
 const orbitPositions = [
