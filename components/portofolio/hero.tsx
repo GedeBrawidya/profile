@@ -116,7 +116,7 @@ export function Hero() {
                 }}
                 whileHover={{ scale: 1.05, boxShadow: "0 20px 25px -5px rgba(var(--accent-rgb), 0.2)" }}
                 whileTap={{ scale: 0.98 }}
-                className="group relative px-8 py-4 bg-gradient-to-r from-accent to-accent/90 text-background rounded-xl font-semibold text-lg shadow-lg hover:shadow-2xl hover:shadow-accent/30 transition-all duration-300 flex items-center gap-2"
+                className="group relative px-8 py-4 bg-gradient-to-r from-accent to-accent/90 text-background rounded-xl font-semibold text-lg shadow-lg hover:shadow-2xl hover:shadow-accent/30 transition-all duration-300 flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent"
               >
                 View My Work
                 <motion.div
@@ -133,7 +133,7 @@ export function Hero() {
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05, boxShadow: "0 20px 25px -5px rgba(var(--accent-rgb), 0.15)" }}
                 whileTap={{ scale: 0.98 }}
-                className="px-8 py-4 border-2 border-accent/30 rounded-xl font-semibold text-lg text-accent hover:bg-accent/10 hover:border-accent/60 transition-all duration-300 shadow-md hover:shadow-lg"
+                className="px-8 py-4 border-2 border-accent/30 rounded-xl font-semibold text-lg text-accent hover:bg-accent/10 hover:border-accent/60 transition-all duration-300 shadow-md hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent"
               >
                 Get In Touch
               </motion.a>
@@ -220,6 +220,7 @@ export function Hero() {
                     fill
                     className="object-cover"
                     priority
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                 </motion.div>
               </AnimatePresence>
